@@ -4,7 +4,9 @@ import { useState } from 'react';
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
 import { getWeatherByCity } from '@/services/weatherService';
-import { WeatherData, WeatherError } from '@/types/weather';
+import { WeatherData } from '@/types/weather';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle, CloudSun } from 'lucide-react';
 
 export default function Home() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -26,27 +28,33 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] p-4">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] p-4 space-y-6">
       <SearchBar onSearch={handleSearch} isLoading={loading} />
       
       {loading && (
-        <div className="text-center text-gray-600 dark:text-gray-400">
+        <div className="text-center text-muted-foreground">
           Loading weather data...
         </div>
       )}
 
       {error && (
-        <div className="text-center text-red-500 mb-4">
-          {error}
-        </div>
+        <Alert variant="destructive" className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       {weather && <WeatherCard data={weather} />}
 
       {!weather && !loading && !error && (
-        <div className="text-center text-gray-600 dark:text-gray-400">
-          Enter a city name to get the weather information
-        </div>
+        <Alert className="max-w-md border-dashed">
+          <CloudSun className="h-4 w-4" />
+          <AlertTitle>Welcome!</AlertTitle>
+          <AlertDescription>
+            Enter a city name to get the weather information
+          </AlertDescription>
+        </Alert>
       )}
     </div>
   );

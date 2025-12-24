@@ -1,7 +1,9 @@
 'use client';
 
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { Search, Loader2 } from 'lucide-react';
 import { useState, FormEvent } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface SearchBarProps {
   onSearch: (city: string) => void;
@@ -20,23 +22,33 @@ export default function SearchBar({ onSearch, isLoading = false }: SearchBarProp
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto mb-8">
-      <div className="relative">
-        <input
-          type="text"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          placeholder="Enter city name..."
-          className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-          disabled={isLoading}
-        />
-        <button
+      <div className="relative flex gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="text"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            placeholder="Enter city name..."
+            className="pl-9 pr-4 h-11 text-base"
+            disabled={isLoading}
+          />
+        </div>
+        <Button
           type="submit"
-          disabled={isLoading}
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+          disabled={isLoading || !city.trim()}
+          className="h-11 px-6"
         >
-          <MagnifyingGlassIcon className="h-5 w-5" />
-        </button>
+          {isLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span className="sr-only">Loading...</span>
+            </>
+          ) : (
+            'Search'
+          )}
+        </Button>
       </div>
     </form>
   );
-} 
+}
